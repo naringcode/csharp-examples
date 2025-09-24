@@ -1,0 +1,71 @@
+Update Date : 2025-09-25
+
+##################################################
+
+https://learn.microsoft.com/ko-kr/dotnet/csharp/linq/get-started/introduction-to-linq-queries
+
+# LINQ(Language Intergrated Query)
+
+LINQ는 C#과 같은 .NET 언어에 내장된 데이터 질의 기능으로 데이터 소스를 통합적으로 조회할 목적으로 사용된다.
+
+배열이나 리스트 같은 컬렉션을 포함해 데이터베이스나 XML 등 다양한 데이터 소스에 대해 일관된 쿼리 방식을 제공한다.
+
+LINQ를 사용하면 손쉽게 데이터 필터링, 정렬, 그룹화, 변환 등을 수행할 수 있다.
+
+
+# LINQ 쿼리 구문
+
+SQL 구문과 유사한 선언적인 형식으로 작성된다(예를 들어 from -> where -> select).
+
+쿼리 구문으로 작성해도 내부적으로 메서드 체인을 호출하는 형태로 변환되어 실행된다.
+
+즉, 쿼리 구문은 일종의 구문 설탕(syntactic sugar)이며, 컴파일을 거치면 메서드 구문으로 전환된다.
+
+* 구문 형태
+
+// 일반적인 형태
+var result = from 범위변수 in 컬렉션
+             where 조건
+             orderby 정렬기준
+             select 선택할값;
+
+// 전체적인 형태
+var result = from 범위변수1 in 컬렉션
+             let 임시값 = 식
+             join 범위변수2 in 다른컬렉션 on 범위변수1키 equals 범위변수2키
+             where 필터조건
+             orderby 정렬기준
+             group 요소 by 키 into 그룹
+             where 그룹필터조건
+             select 선택할값;
+
+code)---------------------------------------------
+int[] numArr = { 1, 2, 3, 4, 5, 6 };
+
+var evenNums = from num in numArr
+               where num % 2 == 0
+               select num;
+
+foreach (var num in evenNums)
+{
+    Console.WriteLine(num); // 2, 4, 6
+}
+--------------------------------------------------
+
+
+# LINQ 메서드 구문
+
+메서드 체인 형태로 작성된다.
+
+code)---------------------------------------------
+int[] numArr = { 1, 2, 3, 4, 5, 6 };
+
+var evenNums = numArr
+               .Where(num => num % 2 == 0)
+               .Select(num => num);
+
+foreach (var num in evenNums)
+{
+    Console.WriteLine(num); // 2, 4, 6
+}
+--------------------------------------------------
