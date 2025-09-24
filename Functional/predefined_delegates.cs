@@ -239,6 +239,4 @@ class Program
         someValue.Value = 200;
         someValue.Value = 300;
     }
-
-    delegate void MyDelegate();
 }
