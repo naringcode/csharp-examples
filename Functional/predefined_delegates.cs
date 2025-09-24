@@ -172,6 +172,8 @@ class Program
 
         // 내림차순 정렬
         comp = (int x, int y) => {
+            // return y.CompareTo(x);
+
             if (x == y)
                 return 0;
 
