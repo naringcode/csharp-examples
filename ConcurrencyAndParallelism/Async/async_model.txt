@@ -1,0 +1,164 @@
+Update Date : 2025-09-25
+
+##################################################
+
+# 비동기 프로그래밍
+
+호출 스레드가 블록되지 않게 하고, 실행 작업을 나중에 진행하거나 결과를 나중에 받는 방식의 프로그래밍 패러다임
+
+
+# C-Sharp에서 지원하는 비동기 프로그래밍 패턴
+
+1. APM(Asynchronous Programming Model) : 비동기 프로그래밍 모델
+
+가장 오래된 방식의 C# 비동기 프로그래밍 패턴
+
+IAsyncResult를 사용하며 Begin/End 쌍을 통해 구현되는 방식
+
+- BeginXxx / EndXxx
+
+code)---------------------------------------------
+// 100MB 확보
+byte[] buffer = new byte[1024 * 1024 * 100];
+
+// https://learn.microsoft.com/ko-kr/dotnet/api/system.io.filestream?view=net-9.0
+var fs = new FileStream("textfile.txt", FileMode.Open);
+
+// BeginRead() 작업이 완료되어야 반응한다(완료 후 콜백).
+IAsyncResult result = fs.BeginRead(buffer, 0, buffer.Length, asyncResult =>
+{
+    int bytesRead = fs.EndRead(asyncResult);
+
+    Console.WriteLine($"Read { bytesRead } bytes");
+}, null);
+--------------------------------------------------
+
+
+2. EAP(Event-based Asynchronous Pattern) : 이벤트 기반 비동기 패턴
+
+이벤트(콜백)를 이용해 비동기 작업의 진행 상황이나 완료 여부에 대한 알림을 받는 방식
+
+- XxxAsync + 이벤트
+
+code)---------------------------------------------
+// https://learn.microsoft.com/ko-kr/dotnet/api/system.net.webclient?view=net-8.0
+WebClient client = new WebClient();
+
+// 이벤트 등록
+client.DownloadStringCompleted += (sender, e) =>
+{
+    string textStr = (string)e.Result;
+
+    Console.WriteLine(textStr);
+};
+
+// 비동기 작업 진행
+client.DownloadStringAsync(new Uri("http://example.com"));
+--------------------------------------------------
+
+
+3. TAP(Task-based Asynchronous Pattern) : 작업 기반 비동기 패턴
+
+현 .NET에서 비동기 프로그래밍 패턴의 표준이 되는 방식(APM과 EAP은 레거시 방식)
+
+Task와 Task<T>를 기반으로 하는 비동기 패턴으로, async와 await 키워드를 사용하여 구현
+
+비동기 방식이지만 async와 await 키워드를 함께 사용하여 동기 코드처럼 작성 가능
+
+- Task, async / await
+
+code)---------------------------------------------
+async Task DownloadAsync()
+{
+    using var client = new HttpClient();
+    
+    string result = await client.GetStringAsync("http://example.com");
+
+    Console.WriteLine("Download Done!");
+    Console.WriteLine(result);
+}
+--------------------------------------------------
+
+code)---------------------------------------------
+static async Task Main()
+{
+    Task<int> task1 = Task.Run(() => SlowCalc(1));
+    Task<int> task2 = Task.Run(() => SlowCalc(2));
+
+    int[] results = await Task.WhenAll(task1, task2);
+
+    Console.WriteLine($"결과 : { string.Join(", ", results) }");
+}
+
+static int SlowCalc(int n)
+{
+    // 동기 블로킹 예시
+    Task.Delay(1000).Wait();
+
+    return n * 10;
+}
+--------------------------------------------------
+
+
+# async
+
+- 메서드, 익명 메서드, 람다에 적용되어 해당 메서드가 비동기 메서드임을 나타냄.
+
+- 비동기 메서드의 반환 타입으로는 Task, Task<T>, void가 있음.
+
+- 일반적으로 Task, Task<T>를 반환하는 것이 좋고, void 반환은 이벤트 헨들러에만 사용됨(특별한 이유가 없다면 async void를 반환하지 않도록 함).
+
+
+# await
+
+- async가 적용된 비동기 메서드 안에서만 사용 가능한 키워드
+
+- await가 적용되면 비동기 작업이 완료될 때까지 해당 메서드의 실행을 일시 중지함.
+
+- await는 Task나 Task<T>와 함께 사용됨.
+
+- await 뒤에 적용한 작업이 완료되면 코드 실행을 재개함.
+
+code)---------------------------------------------
+async Task<int> GetDataAsync()
+{
+    // FetchDataFromDatabaseAsync()의 반환형은 Task<int>이고, 이걸 await에 적용한다.
+    // 이후 비동기 작업이 완료되면 결과를 "int ret"를 통해서 받는다.
+    int ret = await FetchDataFromDatabaseAsync();
+    
+    return ret;
+}
+--------------------------------------------------
+
+
+# Task
+
+- 비동기 작업임을 나타내는 클래스
+
+- 반환 값이 없는 비동기 작업에 사용됨.
+
+code)---------------------------------------------
+async Task PerformOperationAsync()
+{
+    // 반환하는 값 없이 1초 지연
+    await Task.Delay(1000);
+}
+--------------------------------------------------
+
+
+# Task<T>
+
+- 결과를 반환하는 비동기 작업임을 나타내는 클래스
+
+- T는 반환될 값의 타입임.
+
+code)---------------------------------------------
+async Task<string> GetMessageAsync()
+{
+    await Task.Delay(1000);
+
+    // 1초 지연 후 "Hello World" 반환
+    return "Hello World";
+}
+--------------------------------------------------
+
