@@ -1,0 +1,67 @@
+Update Date : 2025-09-28
+
+##################################################
+
+# Attribute
+
+C#에서의 Attribute는 클래스, 메서드, 프로퍼티, 필드 등과 같은 코드 요소에 추가적인 메타데이터를 부여하기 위한 기능이다.
+
+Attribute는 통해 컴파일 시 혹은 런타임 도중 사용되기에 주석 이상의 의미가 있다.
+
+Attribute 자체는 클래스 형태로 정의되며, 대괄호([ ])를 통해 코드 요소에 붙는다.
+
+Attribute가 제 기능을 하려면 컴파일러나 프레임워크가 해당 Attribute를 읽어서 의미를 부여해야 한다.
+
+즉, 이것 자체는 아무런 기능을 수행하지 않는다.
+
+사용자 수준에서 Attribute를 직접 구성하는 것도 가능하며, Reflection을 통해 이러한 메타데이터 정보를 꺼내와 활용할 수 있다.
+
+
+# Attribute의 주 사용 목적
+
+- 메타데이터 제공 : 코드에 대한 정보를 제공
+
+- 컴파일러 지시 : 컴파일러의 동작을 제어
+
+- 런타임 정보 제공 : 런타임 시 코드 요소에 대한 정보를 제공
+
+
+# Attribute 클래스 구성
+
+https://learn.microsoft.com/ko-kr/dotnet/csharp/advanced-topics/reflection-and-attributes/attribute-tutorial
+
+모든 Attribute 클래스는 항상 System.Attribute 클래스를 상속해서 구현되어야 한다.
+
+또한 Attribute 클래스를 구성할 때 이름 뒤에는 접미사로 Attribute를 붙이는 것이 MS에서 권장하는 규칙이다.
+
+클래스 이름 뒤에 Attribute가 붙으면 실제 사용할 때 Attribute를 생략해도 컴파일러는 이를 인지한다.
+
+* ObsoleteAttribute
+
+- 사용 방법 : [ObsoleteAttribute], [Obsolete]
+
+// 언어 차원에서 제공하는 Attribute
+public sealed class ObsoleteAttribute : Attribute
+{
+    public ObsoleteAttribute();
+    public ObsoleteAttribute(string? message);
+    public ObsoleteAttribute(string? message, bool error);
+    ...
+}
+
+[Obsolete("ThisClass is obsolete. Use ThisClass2 instead.")]
+public class ThisClass
+{ }
+
+* 사용자 정의 Attribute
+
+public class MySpecialAttribute : Attribute
+{ }
+
+// [MySpecial]
+[MySpecialAttribute]
+public class SomeOtherClass
+{ }
+
+
+
