@@ -6,9 +6,7 @@
 
 // NuGet : https://www.nuget.org/packages/microsoft.extensions.dependencyinjection/
 
-using C;
 using Microsoft.Extensions.DependencyInjection;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace A
 {
@@ -168,9 +166,9 @@ class Program
         IServiceCollection services = new ServiceCollection();
 
         // 서비스 등록 함수
-        services.AddSingleton<SingletonClass>();
-        services.AddScoped<ScopedClass>();
-        services.AddTransient<TransientClass>();
+        services.AddSingleton<C.SingletonClass>();
+        services.AddScoped<C.ScopedClass>();
+        services.AddTransient<C.TransientClass>();
 
         // DI 컨테이너 빌드
         IServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -181,49 +179,49 @@ class Program
 
         using (var scope = serviceProvider.CreateScope())
         {
-            scope.ServiceProvider.GetRequiredService<SingletonClass>();
-            scope.ServiceProvider.GetRequiredService<ScopedClass>();
-            scope.ServiceProvider.GetRequiredService<TransientClass>();
+            scope.ServiceProvider.GetRequiredService<C.SingletonClass>();
+            scope.ServiceProvider.GetRequiredService<C.ScopedClass>();
+            scope.ServiceProvider.GetRequiredService<C.TransientClass>();
 
-            scope.ServiceProvider.GetRequiredService<SingletonClass>();
-            scope.ServiceProvider.GetRequiredService<ScopedClass>();
-            scope.ServiceProvider.GetRequiredService<TransientClass>();
+            scope.ServiceProvider.GetRequiredService<C.SingletonClass>();
+            scope.ServiceProvider.GetRequiredService<C.ScopedClass>();
+            scope.ServiceProvider.GetRequiredService<C.TransientClass>();
         }
 
         Console.WriteLine("** 2 **");
 
         using (var scope = serviceProvider.CreateScope())
         {
-            scope.ServiceProvider.GetRequiredService<SingletonClass>();
-            scope.ServiceProvider.GetRequiredService<ScopedClass>();
-            scope.ServiceProvider.GetRequiredService<TransientClass>();
+            scope.ServiceProvider.GetRequiredService<C.SingletonClass>();
+            scope.ServiceProvider.GetRequiredService<C.ScopedClass>();
+            scope.ServiceProvider.GetRequiredService<C.TransientClass>();
 
-            scope.ServiceProvider.GetRequiredService<SingletonClass>();
-            scope.ServiceProvider.GetRequiredService<ScopedClass>();
-            scope.ServiceProvider.GetRequiredService<TransientClass>();
+            scope.ServiceProvider.GetRequiredService<C.SingletonClass>();
+            scope.ServiceProvider.GetRequiredService<C.ScopedClass>();
+            scope.ServiceProvider.GetRequiredService<C.TransientClass>();
         }
 
         Console.WriteLine("** 3 **");
 
-        serviceProvider.GetRequiredService<SingletonClass>();
-        serviceProvider.GetRequiredService<ScopedClass>();
-        serviceProvider.GetRequiredService<TransientClass>();
+        serviceProvider.GetRequiredService<C.SingletonClass>();
+        serviceProvider.GetRequiredService<C.ScopedClass>();
+        serviceProvider.GetRequiredService<C.TransientClass>();
 
-        serviceProvider.GetRequiredService<SingletonClass>();
-        serviceProvider.GetRequiredService<ScopedClass>();
-        serviceProvider.GetRequiredService<TransientClass>();
+        serviceProvider.GetRequiredService<C.SingletonClass>();
+        serviceProvider.GetRequiredService<C.ScopedClass>();
+        serviceProvider.GetRequiredService<C.TransientClass>();
 
         Console.WriteLine("** 4 **");
 
         using (var scope = serviceProvider.CreateScope())
         {
-            scope.ServiceProvider.GetRequiredService<SingletonClass>();
-            scope.ServiceProvider.GetRequiredService<ScopedClass>();
-            scope.ServiceProvider.GetRequiredService<TransientClass>();
+            scope.ServiceProvider.GetRequiredService<C.SingletonClass>();
+            scope.ServiceProvider.GetRequiredService<C.ScopedClass>();
+            scope.ServiceProvider.GetRequiredService<C.TransientClass>();
 
-            scope.ServiceProvider.GetRequiredService<SingletonClass>();
-            scope.ServiceProvider.GetRequiredService<ScopedClass>();
-            scope.ServiceProvider.GetRequiredService<TransientClass>();
+            scope.ServiceProvider.GetRequiredService<C.SingletonClass>();
+            scope.ServiceProvider.GetRequiredService<C.ScopedClass>();
+            scope.ServiceProvider.GetRequiredService<C.TransientClass>();
         }
 
         // SingletonClass는 생에 한 번만 생성되고, ScopedClass는 스코프 단위로 생성되고, TransientClass는 매번 생성된다.
